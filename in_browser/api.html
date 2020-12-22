@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Comsume API</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+	
+	<div id="app">
+		<h3 class="text-center py-3">Avaliable Items</h3>
+		<div  class="container my-4 py-4">
+			<div class="row">
+				<div v-for="item in items" class="col-lg-3 col-md-3 col-sm-6 py-4">
+					<div class="card">
+						<div class="inner">
+							<img :src="item.photo" alt="Card image cap" class="card-img-top">
+						</div>
+						<div class="card-body text-justify item-card-body">
+							<p class="py-1 my-0 text-muted">{{item.name}}</p>
+							<p class="py-1 my-0 text-muted">{{item.price}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h3 class="text-center py-3">Avaliable Brands</h3>
+		<div  class="container my-4 py-4">
+			<div class="row">
+				<div v-for="brand in brands" class="col-lg-3 col-md-3 col-sm-6 py-4">
+					<div class="card">
+						<div class="inner">
+							<img :src="brand.photo" alt="Card image cap" class="card-img-top">
+						</div>
+						<div class="card-body text-justify item-card-body">
+							<p class="py-1 my-0 text-muted">{{brand.name}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h3 class="text-center py-3">Avaliable Categories</h3>
+		<div  class="container my-4 py-4">
+			<div class="row">
+				<div v-for="category in categories" class="col-lg-3 col-md-3 col-sm-6 py-4">
+					<div class="card">
+						<div class="inner">
+							<img :src="category.photo" alt="Card image cap" class="card-img-top">
+						</div>
+						<div class="card-body text-justify item-card-body">
+							<p class="py-1 my-0 text-muted">{{category.name}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h3 class="text-center py-3">Avaliable SubCategories</h3>
+		<ul>
+			<li v-for="subcategory in subcategories">
+				{{subcategory.name}}
+			</li>
+			<li v-for="subcategory in subcategories">
+				{{subcategory.category.name}}
+			</li>
+		</ul>
+	</div>
+	
+
+	
+	<!-- <div class="container">
+		<div class="row">
+			<div class="col-md-3">
+				<div id="app">
+					<div v-for="item in items" class="card" style="width: 18rem;">
+					<img :src="item.photo" class="card-img-top" alt="...">
+					<div class="card-body">
+						<h5 class="card-title">{{item.name}}</h5>
+						<p class="card-text">{{item.price}}</p>
+						<a href="#" class="btn btn-primary">Buy</a>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div> -->
+		<!-- <ul>
+			<li v-for="row in info">
+				{{row.code}}-{{row.description}}-
+				<span v-html="row.symbol"></span>{{row.rate_float|currencydecimal}}
+			</li>
+		</ul>
+		<ul>
+			<li v-for="item in items">
+				{{item.name}}
+				<img :src="item.photo" width="100">
+			</li>
+		</ul>
+		<ul>
+			<li v-for="brand in brands">
+				{{brand.name}}
+				<img :src="brand.photo" width="100">
+			</li>
+		</ul> -->
+	
+	<script type="text/javascript">
+		new Vue({
+			el:"#app",
+			data:{
+				info:null,
+				items:null,
+				brands:null,
+				categories:null,
+				subcategories:null,
+		
+			},
+			created(){
+				axios.get('https://api.coindesk.com/v1/bpi/currentprice.json')
+				.then(response=>{
+					this.info=response.data.bpi
+				})
+
+				axios.get('http://localhost:8000/api/items')
+				.then(response=>{
+					this.items=response.data.items
+				})
+
+				axios.get('http://localhost:8000/api/brands')
+				.then(response=>{
+					this.brands=response.data.brands
+				})
+
+				axios.get('http://localhost:8000/api/categories')
+				.then(response=>{
+					this.categories=response.data.categories
+				})
+
+				axios.get('http://localhost:8000/api/subcategories')
+				.then(response=>{
+					this.subcategories=response.data.subcategories
+				})
+
+			},
+			filters:{
+				currencydecimal(value){
+					return value.toFixed(2)
+				}
+			}
+		})
+	</script>
+</body>
+</html>
